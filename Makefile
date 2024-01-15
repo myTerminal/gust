@@ -76,7 +76,7 @@ place:
 manpage:
 	@echo "Creating manpage..."
 	mkdir -p $(MANPREFIX)
-	sudo rsync ./man/gust*.1 $(MANPREFIX)/man1/
+	sudo cp ./man/gust*.1 $(MANPREFIX)/man1/
 	@echo "Manpage created."
 
 install: req place manpage

@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/github/license/myTerminal/gust.svg)](https://opensource.org/licenses/MIT)  
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Y8Y5E5GL7)
 
-A generic CLI tool for penetration testing
+An experimental CLI tool for penetration testing
 
 > **Caution:** This project is intended solely for penetration testing purposes on your own networks. Unauthorized use on systems or networks that do not belong to you is strictly prohibited and may be illegal. I do not endorse, support, or bear any responsibility for any illegal activities conducted using this project. It is essential to adhere to ethical hacking practices and obtain proper authorization before engaging in penetration testing activities. Unauthorized penetration testing on external networks may lead to severe legal consequences. Use this tool responsibly and within the bounds of the law.
 

@@ -34,13 +34,15 @@ Simply execute the below command in a terminal and the rest should be automatic.
 
 ## How to Use
 
-(coming soon...)
+Currently, *gust* only supports a single command:
+
+1. **gust-pmkid+** - runs a PMKID attack through prompts.
 
 ### Further help with commands
 
-To learn more about usage, refer to `manpage`:
+To learn more about the usage of a particular command, refer to the corresponding `manpage`:
 
-    man gust
+    man gust-pmkid+
 
 ## Updating
 

@@ -26,7 +26,7 @@ else
 	/tmp/crater-cli/crater install aircrack-ng
 endif
 	@echo "Making sure hcxtools is installed..."
-ifneq ($(shell command -v hcxtools),)
+ifneq ($(shell command -v hcxpcapngtool),)
 	@echo "hcxtools found."
 else
 	@echo "hcxtools not found!"

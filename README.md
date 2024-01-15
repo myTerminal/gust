@@ -73,4 +73,4 @@ If not installed automatically, you may install it manually.
 
 ## To-Do's
 
-- Create manpages for all commands
+- Use audio feedback

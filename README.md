@@ -76,3 +76,5 @@ If not installed automatically, you may install it manually.
 ## To-Do's
 
 - Use audio feedback
+- Read wireless adapters, prompt for selection
+- Reduce manual copy/paste

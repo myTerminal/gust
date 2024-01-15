@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+git clone https://github.com/myTerminal/gust /tmp/gust
+(cd /tmp/gust; make uninstall)
+rm -rf /tmp/gust

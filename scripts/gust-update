@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+git clone https://github.com/myTerminal/gust /tmp/gust
+(cd /tmp/gust; make update)
+rm -rf /tmp/gust

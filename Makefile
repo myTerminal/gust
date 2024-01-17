@@ -1,4 +1,5 @@
 SHELL = /bin/sh
+OPT_DIR = /opt
 
 ifeq ($(PREFIX),)
 	PREFIX := /usr/local
@@ -71,6 +72,8 @@ place:
 	@echo "Installing commands..."
 	sudo install ./commands/* $(PREFIX)/bin/
 	sudo install ./scripts/* $(PREFIX)/bin/
+	sudo mkdir $(OPT_DIR)/gust
+	sudo cp -R ./parsers/* $(OPT_DIR)/gust/
 	@echo "commands installed."
 
 manpage:
@@ -86,6 +89,7 @@ uninstall:
 	@echo "Uninstalling gust..."
 	sudo rm $(PREFIX)/bin/gust*
 	sudo rm $(MANPREFIX)/man1/gust*.1
+	sudo rm -rf $(OPT_DIR)/gust
 	@echo "gust has been uninstalled."
 
 reinstall: uninstall install

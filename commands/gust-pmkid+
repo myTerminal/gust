@@ -94,10 +94,8 @@ gt_crack_hashes () {
 main () {
     # Warn about running network services
     gt_warning "Please stop all network services before proceeding!"
-    gt_pause "Press any key to proceed once you've done so..."
-
-    # Prompt for network adapter to use
-    gt_prompt "Please specify the network adapter to use" v_network_adapter
+    gt_pause "Press any key to proceed and select a network adapter to use..."
+    v_network_adapter=$(ip a | xargs -0 sbcl --script /opt/gust/parse-network-adapters.lisp | fzf)
 
     # Start monitoring on the chosen network adapter
     sudo airmon-ng start $v_network_adapter

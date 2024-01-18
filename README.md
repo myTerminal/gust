@@ -60,6 +60,7 @@ In order to uninstall *gust*, simply run:
 
 *gust* depends on a few very basic and popular tools:
 
+ - [fzf](https://github.com/junegunn/fzf)
  - [aircrack-ng](https://www.aircrack-ng.org)
  - [hcxtools](https://github.com/ZerBea/hcxtools)
  - [hcxdumptool](https://github.com/ZerBea/hcxdumptool)

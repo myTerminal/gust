@@ -18,6 +18,14 @@ crater-get:
 	git clone https://github.com/crater-space/cli /tmp/crater-cli
 
 primary-deps:
+	@echo "Making sure fzf is installed..."
+ifneq ($(shell command -v fzf),)
+	@echo "fzf found."
+else
+	@echo "fzf not found!"
+	@echo "Attemping to install fzf using Crater..."
+	/tmp/crater-cli/crater install fzf
+endif
 	@echo "Making sure aircrack-ng is installed..."
 ifneq ($(shell command -v aircrack-ng),)
 	@echo "aircrack-ng found."

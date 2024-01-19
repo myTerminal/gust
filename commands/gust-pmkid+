@@ -115,7 +115,7 @@ main () {
     v_network_channel=$(cat /tmp/access-points-01.csv | xargs -0 sbcl --script /opt/gust/parse-access-points.lisp channel "${v_access_point}")
 
     # Clear dump details
-    sudo rm /tmp/access-points-01.csv
+    sudo rm /tmp/access-points-01*
 
     gt_log "Starting to look for devices on ${v_network_ssid}, channel ${v_network_channel}..."
     gt_pause "Press any key to start searching, then press \"q\" twice to stop."

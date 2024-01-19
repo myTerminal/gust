@@ -30,13 +30,24 @@
                                     (let ((value (nth 13 (string-to-list x #\,))))
                                       (or (string-equal " " value)
                                           (null value))))
-                                  relevant-lines)))
-  (princ (cond ((equal mode "0") (reduce (lambda (a b)
-                                           (concatenate 'string a "
+                                  relevant-lines))
+       (generated-list (mapcar (lambda (x)
+                                 (let ((row (string-to-list x #\,)))
+                                   (concatenate 'string
+                                                (string-trim '(#\Space) (nth 0 row))
+                                                ", "
+                                                (string-trim '(#\Space) (nth 13 row))
+                                                ", "
+                                                (string-trim '(#\Space) (nth 3 row)))))
+                               filtered-lines)))
+  (princ (cond ((equal mode "list") (reduce (lambda (a b)
+                                              (concatenate 'string a "
 " b))
-                                         (mapcar (lambda (x)
-                                                   (string-trim '(#\Space) (nth 13 (string-to-list x #\,))))
-                                                 filtered-lines)))
-               ((equal mode "1") (first (string-to-list (nth (parse-integer arg) filtered-lines) #\,)))
-               ((equal mode "2") (fourth (string-to-list (nth (parse-integer arg) filtered-lines) #\,))))))
+                                            generated-list))
+               ((equal mode "ssid") (let ((pos (position arg generated-list :test #'string-equal)))
+                                      (string-trim '(#\Space)
+                                                   (first (string-to-list (nth pos generated-list) #\,)))))
+               ((equal mode "channel") (let ((pos (position arg generated-list :test #'string-equal)))
+                                         (string-trim '(#\Space)
+                                                      (third (string-to-list (nth pos generated-list) #\,))))))))
 (princ #\Newline)

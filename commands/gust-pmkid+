@@ -106,11 +106,17 @@ main () {
     # Find available access points
     gt_log "Starting to look for access points on ${v_network_adapter}mon..."
     gt_pause "Press any key to start searching, then press \"q\" twice to stop."
-    sudo airodump-ng ${v_network_adapter}mon
+    sudo airodump-ng ${v_network_adapter}mon -w /tmp/access-points
 
     # Look for devices on the selected network
-    gt_prompt "Please specify the SSID of the network to use" v_network_ssid
-    gt_prompt "Please specify the channel to use" v_network_channel
+    gt_pause "Please specify the network to use. Press RET to select one from the list..."
+    v_access_point=$(cat /tmp/access-points-01.csv | xargs -0 sbcl --script /opt/gust/parse-access-points.lisp list _ | fzf)
+    v_network_ssid=$(cat /tmp/access-points-01.csv | xargs -0 sbcl --script /opt/gust/parse-access-points.lisp ssid "${v_access_point}")
+    v_network_channel=$(cat /tmp/access-points-01.csv | xargs -0 sbcl --script /opt/gust/parse-access-points.lisp channel "${v_access_point}")
+
+    # Clear dump details
+    sudo rm /tmp/access-points-01.csv
+
     gt_log "Starting to look for devices on ${v_network_ssid}, channel ${v_network_channel}..."
     gt_pause "Press any key to start searching, then press \"q\" twice to stop."
     sudo airodump-ng -d $v_network_ssid -c $v_network_channel ${v_network_adapter}mon

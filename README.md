@@ -77,4 +77,3 @@ If not installed automatically, you may install it manually.
 ## To-Do's
 
 - Use audio feedback
-- Reduce manual copy/paste

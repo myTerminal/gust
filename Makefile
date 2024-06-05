@@ -23,7 +23,7 @@ ifneq ($(shell command -v fzf),)
 	@echo "fzf found."
 else
 	@echo "fzf not found!"
-	@echo "Attemping to install fzf using Crater..."
+	@echo "Attempting to install fzf using Crater..."
 	/tmp/crater-cli/crater install fzf
 endif
 	@echo "Making sure aircrack-ng is installed..."
@@ -31,7 +31,7 @@ ifneq ($(shell command -v aircrack-ng),)
 	@echo "aircrack-ng found."
 else
 	@echo "aircrack-ng not found!"
-	@echo "Attemping to install aircrack-ng using Crater..."
+	@echo "Attempting to install aircrack-ng using Crater..."
 	/tmp/crater-cli/crater install aircrack-ng
 endif
 	@echo "Making sure hcxtools is installed..."
@@ -39,7 +39,7 @@ ifneq ($(shell command -v hcxpcapngtool),)
 	@echo "hcxtools found."
 else
 	@echo "hcxtools not found!"
-	@echo "Attemping to install hcxtools using Crater..."
+	@echo "Attempting to install hcxtools using Crater..."
 	/tmp/crater-cli/crater install hcxtools
 endif
 	@echo "Making sure hcxdumptool is installed..."
@@ -47,7 +47,7 @@ ifneq ($(shell command -v hcxdumptool),)
 	@echo "hcxdumptool found."
 else
 	@echo "hcxdumptool not found!"
-	@echo "Attemping to install hcxdumptool using Crater..."
+	@echo "Attempting to install hcxdumptool using Crater..."
 	/tmp/crater-cli/crater install hcxdumptool
 endif
 	@echo "Making sure hashcat is installed..."
@@ -55,7 +55,7 @@ ifneq ($(shell command -v hashcat),)
 	@echo "hashcat found."
 else
 	@echo "hashcat not found!"
-	@echo "Attemping to install hashcat using Crater..."
+	@echo "Attempting to install hashcat using Crater..."
 	/tmp/crater-cli/crater install hashcat
 endif
 	@echo "All required dependencies found."
@@ -66,7 +66,7 @@ ifneq ($(shell command -v beep),)
 	@echo "'beep' found."
 else
 	@echo "'beep' not found!"
-	@echo "Attemping to install 'beep' using Crater..."
+	@echo "Attempting to install 'beep' using Crater..."
 	/tmp/crater-cli/crater install beep
 endif
 
